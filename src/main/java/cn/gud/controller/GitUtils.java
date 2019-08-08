@@ -13,6 +13,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
@@ -33,6 +34,12 @@ public class GitUtils {
   private RevWalk walk;
   private String projectName;
 
+  /**
+   * 初始化工厂
+   * @param parrentFolder
+   * @throws IOException
+   * @throws GitAPIException
+   */
   GitUtils(File parrentFolder) throws IOException,GitAPIException {
     FileRepositoryBuilder builder = new FileRepositoryBuilder();
     try (Repository repository = builder
@@ -47,16 +54,30 @@ public class GitUtils {
     }
   }
 
+  /**
+   * 获取工程的tag的列表
+   * @return
+   * @throws GitAPIException
+   * @throws IOException
+   */
   public List<Tag> getAllTags() throws GitAPIException, IOException {
     List<Ref> call;
     List<Tag> tags = new LinkedList<Tag>();
     call = this.git.tagList().call();
     for(Ref ref : call) {
       Tag tag = new Tag();
+      System.out.println(ref.getName());
+      System.out.println(ref.getObjectId());
+      System.out.println(ref.getObjectId().toObjectId());
+      ObjectId objectId = ref.getObjectId();
+      RevTag revTag = this.walk.lookupTag(objectId);
+      System.out.println(revTag.getFullMessage() + revTag.getShortMessage() + revTag.getTagName() + revTag.toString());
       tag.setTagVersion(ref.getName().split("/")[2]);
       tag.setProjectName(this.projectName);
       tags.add(tag);
     }
     return tags;
   }
+
+
 }

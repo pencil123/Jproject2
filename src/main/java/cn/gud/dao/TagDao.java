@@ -7,5 +7,6 @@ import cn.gud.domain.Tag;
  * @since 2019/8/8 13:19
  */
 public interface TagDao {
-  public void InsertTag( Tag tag);
+  public void InsertTagIfNotExist( Tag tag);
+  public boolean TagIfExist(Tag tag);
 }

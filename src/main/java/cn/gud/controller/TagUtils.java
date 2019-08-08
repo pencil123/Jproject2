@@ -22,17 +22,25 @@ public class TagUtils {
   @Autowired
   private ProjectDaoImpl projectDaoImpl;
 
+  /**
+   * 遍历工程的Tags 写入到数据库
+   * @throws IOException
+   * @throws GitAPIException
+   */
   public void updateProjectTags() throws IOException, GitAPIException {
-    String parrentDir = "C:\\Users\\pencil\\work\\git\\jsh-bak\\";
+    String parrentDir = "D:\\git\\jsh-bak\\";
     List<String> projectsName = new ArrayList<String>();
     projectsName = projectDaoImpl.selectNames();
+
     for (int i = 0;i < projectsName.size();i++) {
       String projectDir =  parrentDir + projectsName.get(i);
+      System.out.println(projectDir);
       GitUtils git = new GitUtils(new File(projectDir));
       List<Tag> tags =  git.getAllTags();
-      for(i = 0; i < tags.size();i++) {
-        System.out.println(tags.get(i).getProjectName());
-        System.out.println(tags.get(i).getTagVersion());
+
+      for(int l = 0; l < tags.size();l++) {
+        System.out.println(tags.get(l).getTagVersion());
+        tagDaoImpl.InsertTagIfNotExist(tags.get(i));
       }
     }
   }

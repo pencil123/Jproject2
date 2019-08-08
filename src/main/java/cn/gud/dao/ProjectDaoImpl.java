@@ -33,12 +33,11 @@ public class ProjectDaoImpl implements ProjectDao {
      * @return List  Type   工程名
      */
     public List<String> selectNames() {
-        String sql = "select name from publish_projects_list";
+        String sql = "select name from publish_projects_list where name=?";
         final List<String> names = new ArrayList<String>();
-        jdbcTemplate.query(sql,new Object[ ]{},new RowCallbackHandler(){
+        jdbcTemplate.query(sql,new Object[ ]{"ylh-cloud-goods-api"},new RowCallbackHandler(){
             public void processRow(ResultSet rs) throws SQLException {
-                String name ;
-                name = rs.getString("name");
+                String name = rs.getString("name");
                 names.add(name);
             }
         });
