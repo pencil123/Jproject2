@@ -1,4 +1,5 @@
 import cn.gud.controller.ProjectUtils;
+import cn.gud.controller.Publisher;
 import cn.gud.controller.TagUtils;
 import cn.gud.dao.JdbcUtils;
 import cn.gud.dao.ProjectDaoImpl;
@@ -63,7 +64,7 @@ public class JdbcTemplateDemo2 {
   @Test
   public static void main(String[] args) throws IOException, GitAPIException {
     ApplicationContext ac = new ClassPathXmlApplicationContext("Application.xml");
-    ProjectUtils ob = ac.getBean(ProjectUtils.class);
+    Publisher ob = ac.getBean(Publisher.class);
     ob.main();
     }
 }

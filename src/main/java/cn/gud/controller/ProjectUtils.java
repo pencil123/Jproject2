@@ -15,16 +15,20 @@ import org.springframework.stereotype.Service;
  * @author 张鲁燕
  * @since 2019/8/9 16:56
  */
+@Service
 @PropertySource({"classpath:config.properties"})
 public class ProjectUtils {
+  @Autowired
   private Project project;
   @Autowired
   private ProjectDaoImpl projectDaoImpl;
-  @Value("${parrentDir}")
-  private String parrentDir;
   private GitUtils gitUtils;
 
-  ProjectUtils(String projectName) {
+  @Value("${parrentDir.path}")
+  private String parrentDir;
+
+  public void setProject(String projectName) {
+    System.out.println(parrentDir + projectName);
     project.setName(projectName);
     try {
       this.gitUtils = new GitUtils(new File(parrentDir + projectName));
@@ -36,13 +40,8 @@ public class ProjectUtils {
   }
 
   public boolean checkoutBranch(String branchName) {
-    try {
-      this.gitUtils.checkoutBranch(branchName);
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (GitAPIException e) {
-      e.printStackTrace();
-    }
+     // this.gitUtils.checkoutBranch(branchName);
+      this.gitUtils.createBranchIfNotExist(branchName);
     return true;
 
   }

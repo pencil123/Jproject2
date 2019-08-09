@@ -12,6 +12,7 @@
 
     <context:component-scan base-package="cn.gud.dao"/>
     <context:component-scan base-package="cn.gud.controller"/>
+    <context:component-scan base-package="cn.gud.domain"/>
     <!-- 配置一个数据库的操作模板：JdbcTemplate -->
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"></property>
@@ -25,5 +26,7 @@
         <property name="username" value="lyzhang"></property>
         <property name="password" value="lyzhang"></property>
     </bean>
+
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:config.properties"/>
 
 </beans>

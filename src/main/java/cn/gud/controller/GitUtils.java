@@ -44,6 +44,7 @@ public class GitUtils {
    */
   GitUtils(File parrentFolder) throws IOException,GitAPIException {
     FileRepositoryBuilder builder = new FileRepositoryBuilder();
+    System.out.println(parrentFolder.getName());
     try (Repository repository = builder
         .setGitDir(new File(parrentFolder.getAbsolutePath() + System.getProperty("file.separator") + ".git"))
         .readEnvironment()
@@ -80,7 +81,8 @@ public class GitUtils {
 
   public boolean createBranchIfNotExist(String branchName){
     try {
-      List<Ref> call = this.git.branchList().call();
+      List<Ref> call = this.git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
+      System.out.println(call.size());
       for (Ref ref : call) {
         System.out.println(ref.getName());
       }

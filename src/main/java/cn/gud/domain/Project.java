@@ -1,5 +1,8 @@
 package cn.gud.domain;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Project {
     private int id;
     private String name;
