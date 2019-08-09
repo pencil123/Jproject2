@@ -27,22 +27,33 @@ public class TagUtils {
    * @throws IOException
    * @throws GitAPIException
    */
-  public void updateProjectTags() throws IOException, GitAPIException {
-    String parrentDir = "D:\\git\\jsh-bak\\";
+  public void updateProjectsTags() throws IOException, GitAPIException {
+    String parrentDir = "C:\\Users\\pencil\\work\\git\\jsh-bak\\";
     List<String> projectsName = new ArrayList<String>();
     projectsName = projectDaoImpl.selectNames();
 
-    for (int i = 0;i < projectsName.size();i++) {
-      String projectDir =  parrentDir + projectsName.get(i);
-      System.out.println(projectDir);
-      GitUtils git = new GitUtils(new File(projectDir));
-      List<Tag> tags =  git.getAllTags();
-
-      for(int l = 0; l < tags.size();l++) {
-        System.out.println(tags.get(l).getTagVersion());
-        tagDaoImpl.InsertTagIfNotExist(tags.get(i));
+    for (int i = 0; i < projectsName.size(); i++) {
+      String projectDir = parrentDir + projectsName.get(i);
+      updateProjectTags(new File(projectDir));
       }
+  }
+
+  /**
+   * 遍历一个工程的Tags 写入到数据库
+   * @param projectDir 工程的存储目录
+   * @return
+   * @throws IOException
+   * @throws GitAPIException
+   */
+  public boolean updateProjectTags(File projectDir) throws IOException,GitAPIException {
+    GitUtils git = new GitUtils(projectDir);
+    List<Tag> tags =  git.getAllTags();
+
+    for(int l = 0; l < tags.size();l++) {
+      System.out.println(tags.get(l).getTagVersion());
+      tagDaoImpl.InsertTagIfNotExist(tags.get(l));
     }
+    return true;
   }
 
 }

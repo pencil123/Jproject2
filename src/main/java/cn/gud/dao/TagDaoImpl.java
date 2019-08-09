@@ -20,8 +20,8 @@ public class TagDaoImpl implements TagDao {
    */
   public void InsertTagIfNotExist(Tag tag) {
     if (! TagIfExist(tag)) {
-      String sql = "insert into project_tags_list(name,tag_name) values(?,?)";
-      Object[ ] params = new Object [] {tag.getProjectName(),tag.getTagVersion()};
+      String sql = "insert into project_tags_list(name,tag_name,commit_datetime) values(?,?,?)";
+      Object[ ] params = new Object [] {tag.getProjectName(),tag.getTagVersion(),tag.getDate()};
       jdbcTemplate.update(sql,params);
     }
   }

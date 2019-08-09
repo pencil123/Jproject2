@@ -1,5 +1,7 @@
 package cn.gud.domain;
 
+import java.util.Date;
+
 /**
  * @author 张鲁燕
  * @since 2019/8/8 13:32
@@ -8,7 +10,7 @@ public class Tag {
   private int id;
   private String projectName;
   private String tagVersion;
-  private  int timestamp;
+  private String date;
 
   public String getProjectName() {
     return projectName;
@@ -34,12 +36,12 @@ public class Tag {
     this.tagVersion = tagVersion;
   }
 
-  public int getTimestamp() {
-    return timestamp;
+  public String getDate() {
+    return date;
   }
 
-  public void setTimestamp(int timestamp) {
-    this.timestamp = timestamp;
+  public void setDate(String date) {
+    this.date = date;
   }
 
 }
