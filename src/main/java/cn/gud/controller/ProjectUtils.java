@@ -4,6 +4,7 @@ import cn.gud.dao.ProjectDaoImpl;
 import cn.gud.domain.Project;
 import java.io.File;
 import java.io.IOException;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class ProjectUtils {
   @Value("${parrentDir.path}")
   private String parrentDir;
 
+  private File fullDir;
+  /**
+   * 设置操作的工厂的名，初始函数的作用
+   * @param projectName
+   */
   public void setProject(String projectName) {
     System.out.println(parrentDir + projectName);
     project.setName(projectName);
@@ -39,13 +45,23 @@ public class ProjectUtils {
     }
   }
 
+  /**
+   * 将工程代码切换到指定的分支
+   * @param branchName
+   * @return
+   */
   public boolean checkoutBranch(String branchName) {
-     // this.gitUtils.checkoutBranch(branchName);
-      this.gitUtils.createBranchIfNotExist(branchName);
+    this.gitUtils.checkoutBranch(branchName);
     return true;
+  }
 
+  public boolean pullBranch(String branchName) {
+   this.gitUtils.pullBranch(branchName);
+   return true;
   }
-  public  void main() {
-    System.out.println(parrentDir);
+
+  public boolean createTag() {
+   return true;
   }
+  
 }

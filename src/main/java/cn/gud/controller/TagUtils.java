@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +24,8 @@ public class TagUtils {
   private TagDaoImpl tagDaoImpl;
   @Autowired
   private ProjectDaoImpl projectDaoImpl;
+  @Value("${parrentDir.path}")
+  private String parrentDir;
 
   /**
    * 遍历工程的Tags 写入到数据库
@@ -28,7 +33,6 @@ public class TagUtils {
    * @throws GitAPIException
    */
   public void updateProjectsTags() throws IOException, GitAPIException {
-    String parrentDir = "C:\\Users\\pencil\\work\\git\\jsh-bak\\";
     List<String> projectsName = new ArrayList<String>();
     projectsName = projectDaoImpl.selectNames();
 
@@ -53,6 +57,23 @@ public class TagUtils {
       System.out.println(tags.get(l).getTagVersion());
       tagDaoImpl.InsertTagIfNotExist(tags.get(l));
     }
+    return true;
+  }
+
+
+  /**
+   * 指定工程创建tag,PS:将工程切换到master分支后，才会创建
+   * @param projectName
+   * @param tagName
+   * @return
+   * @throws IOException
+   * @throws GitAPIException
+   */
+  public boolean createTag(String projectName,String tagName) throws IOException,GitAPIException {
+    String projectDir = parrentDir + projectName;
+    GitUtils git = new GitUtils(new File(projectDir));
+    git.pullBranch("master");
+    git.createTag(tagName);
     return true;
   }
 

@@ -61,7 +61,7 @@ public class GitUtils {
    * 获取当前工程目前所在分支
    * @return branch 名称
    */
-  public String getCurrentBranch() throws IOException{
+  private String getCurrentBranch() throws IOException{
     String currentBranch = this.repository.getBranch();
     return currentBranch;
   }
@@ -70,7 +70,7 @@ public class GitUtils {
    * 将工程的工作目录强制回滚到Head
    * @return
    */
-  public boolean workDirResetToHead() {
+  private boolean workDirResetToHead() {
     try {
       this.git.reset().setMode(ResetCommand.ResetType.HARD).call();
     } catch (GitAPIException e) {
@@ -79,12 +79,30 @@ public class GitUtils {
     return true;
   }
 
-  public boolean createBranchIfNotExist(String branchName){
+  /**
+   * 如果分支不存在，使用远程分支创建分支；如果远程也不存在，则返回失败
+   * @param branchName
+   * @return
+   */
+  private boolean createBranchIfNotExist(String branchName){
     try {
       List<Ref> call = this.git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
-      System.out.println(call.size());
       for (Ref ref : call) {
-        System.out.println(ref.getName());
+        if (ref.getName().equals("refs/heads/" + branchName)){ return true;}
+      }
+      String remoteBranch = null;
+      for (Ref ref : call) {
+        if (ref.getName().substring(ref.getName().lastIndexOf('/')+1, ref.getName().length()).equals(branchName)){
+          remoteBranch = ref.getName();
+          break;
+        }
+      }
+      if (remoteBranch == null) {
+        return false;
+      }else {
+        System.out.println("create branch: " + branchName + "  start point: " + remoteBranch);
+        git.branchCreate().setName(branchName).setStartPoint(remoteBranch).call();
+        return true;
       }
     } catch (GitAPIException e) {
       e.printStackTrace();
@@ -97,11 +115,39 @@ public class GitUtils {
    * @param branchName
    * @return
    */
-  public boolean checkoutBranch(String branchName) throws IOException,GitAPIException{
-    if (branchName.equals(getCurrentBranch())) {return true;}
+  public boolean checkoutBranch(String branchName){
     if (!workDirResetToHead()) {return false;}
-    this.git.checkout().setName(branchName).call();
-    return true;
+    try {
+      if (branchName.equals(getCurrentBranch())) {return true;}
+      if (createBranchIfNotExist(branchName)) {
+        this.git.checkout().setName(branchName).call();
+        return true;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (GitAPIException e) {
+      e.printStackTrace();
+    }
+    System.out.println("切换分支失败！！！！！！！");
+    return false;
+  }
+
+  /**
+   * 切换到指定分支，并从远程拉去代码
+   * @param branchName
+   * @return
+   */
+  public boolean pullBranch(String branchName) {
+    if (! checkoutBranch(branchName)) return false;
+    try {
+      PullResult pull = this.git.pull().call();
+      if (pull.isSuccessful()) {
+        return true;
+      }
+    } catch (GitAPIException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   /**
@@ -129,5 +175,19 @@ public class GitUtils {
     return tags;
   }
 
-
+  /**
+   * 在当前的HEAD 中创建tag
+   * @param tagName
+   * @return
+   */
+  public boolean createTag(String tagName) {
+   try {
+     this.git.tag().setName(tagName).call();
+     this.git.push().setPushTags().call();
+     return true;
+   } catch (GitAPIException e) {
+     e.printStackTrace();
+   }
+   return false;
+ }
 }
