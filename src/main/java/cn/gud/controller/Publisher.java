@@ -22,11 +22,12 @@ public class Publisher {
 
     public  void main() {
         List<String> projectName = new ArrayList<String>();
-        projectName = projectDaoImpl.selectNames();
+        projectName = projectDaoImpl.selectMavenNames();
         for(String name : projectName) {
             System.out.println(name);
             projectUtils.setProject(name);
             projectUtils.pullBranch("dev");
+            projectUtils.getPom();
         }
     }
 }

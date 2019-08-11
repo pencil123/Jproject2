@@ -43,4 +43,21 @@ public class ProjectDaoImpl implements ProjectDao {
         });
         return names;
     }
+
+
+    /**
+     * 查询所有Maven工程的名称
+     * @return List  Type   工程名
+     */
+    public List<String> selectMavenNames() {
+        String sql = "select name from publish_projects_list where isMaven =1";
+        final List<String> names = new ArrayList<String>();
+        jdbcTemplate.query(sql,new Object[ ]{},new RowCallbackHandler(){
+            public void processRow(ResultSet rs) throws SQLException {
+                String name = rs.getString("name");
+                names.add(name);
+            }
+        });
+        return names;
+    }
 }
