@@ -26,7 +26,7 @@ public class Publisher {
         for(String name : projectName) {
             System.out.println(name);
             projectUtils.setProject(name);
-            projectUtils.pullBranch("dev");
+            projectUtils.pullBranch("master");
             projectUtils.getPom();
         }
     }

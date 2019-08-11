@@ -12,12 +12,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProjectDaoImpl implements ProjectDao {
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 更新工程信息

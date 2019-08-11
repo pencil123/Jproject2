@@ -73,6 +73,10 @@ public class ProjectUtils {
    return true;
   }
 
+  /**
+   * 获取工程的version和dependencies信息，写入数据库
+   * @return
+   */
   public boolean getPom() {
     File pomFile = new File(parrentDir + this.projectName + System.getProperty("file.separator") + "pom.xml");
     PomUtils pomUtils = new PomUtils(pomFile);
@@ -82,5 +86,6 @@ public class ProjectUtils {
     pomDaoImpl.updatePom(dependency);
     return true;
   }
+
 
 }
